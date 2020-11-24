@@ -91,5 +91,6 @@ margin_bottom = 14.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="pressed" from="MarginContainer/HBoxContainer/HBoxContainer2/Panel/VBoxContainer/General" to="." method="_on_General_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/HBoxContainer2/Panel/VBoxContainer/Video" to="." method="_on_Video_pressed"]

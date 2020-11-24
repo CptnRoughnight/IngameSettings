@@ -7,7 +7,19 @@ onready var items = $MarginContainer/HBoxContainer/HBoxContainer3/ScrollContaine
 export var Active : bool = false
 export var showFPS : bool = false
 
+# Menu Item Format
+enum MENUITEM {
+	BUTTON,
+	CHECK ,
+	OPTION
+}
+
 # General Menu
+# user add item format
+# name,type(MENUITEM),callback(funcref)
+var general_menu_items = {
+	
+}
 
 # Video Menu
 var video_menu_items = {
@@ -93,11 +105,6 @@ func _ready():
 	_cur_stretchmode = 0
 	
 	$MarginContainer.visible=false
-	for i in range(0,100):
-		var op = OptionButton.new()
-		op.text = "Test"+str(i)
-		op.connect("button_down",self,"_on_general_button_down",[op])
-		items.add_child(op)
 
 func _process(_delta):
 	print("hey")
@@ -105,6 +112,15 @@ func _process(_delta):
 	
 func _on_General_pressed() -> void:
 	clearItems()
+	for item in general_menu_items.values():
+		if item["type"]==MENUITEM.BUTTON:
+			print("button added")
+			var b = Button.new()
+			b.text = item["name"]
+			b.connect("pressed",self,"_on_general_button_down",[b])
+			items.add_child(b)
+			item["node"] = b
+	
 	
 func _on_Video_pressed() -> void:
 	clearItems()
@@ -148,7 +164,11 @@ func clearItems() -> void:
 		n.queue_free()
 
 func _on_general_button_down(n : Node) -> void:
-	print("What the Fuck" + str(n));
+	for item in general_menu_items.values():
+		if item["callback"]!=null:
+			if item["node"]==n:
+				item["callback"].call_func(n)
+			
 
 func _on_video_button_down(value) -> void:
 	print("Video " + str(value));
@@ -191,3 +211,7 @@ func _on_stretch_aspect_changed(index) -> void:
 # User Overrides
 func set_Resolution_List(resList) -> void:
 	resolution = resList
+
+func add_General_Option(name,menutype = MENUITEM.BUTTON,callback=null) -> void:
+	var dummy =  {"name" : name,"type": menutype,"callback" :callback ,"node" : null} 
+	general_menu_items[general_menu_items.size()+1] = dummy
