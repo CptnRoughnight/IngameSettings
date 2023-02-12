@@ -6,14 +6,26 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
+config_version=5
 
 [application]
 
-config/name="Ingame Settings"
-run/main_scene="res://SettingsMenu.tscn"
-config/icon="res://icon.png"
+config/name="IngameSettingsPlugin"
+run/main_scene="res://TestScene.tscn"
+config/features=PackedStringArray("4.0", "C#", "Forward Plus")
+run/max_fps=768
+config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1136
+window/size/viewport_height=640
+window/vsync/vsync_mode=0
+
+[dotnet]
+
+project/assembly_name="IngameSettingsPlugin"
 
 [rendering]
 
-environment/default_environment="res://default_env.tres"
+anti_aliasing/quality/msaa_3d=3

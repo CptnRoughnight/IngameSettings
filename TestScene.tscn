@@ -1,0 +1,66 @@
+[gd_scene load_steps=9 format=3 uid="uid://dvbcktct3763w"]
+
+[ext_resource type="Script" path="res://TestScene.cs" id="1_6j1h2"]
+[ext_resource type="PackedScene" uid="uid://cvxgfhsb77lc8" path="res://IngameSettings/code/ingame_settings.tscn" id="2_uowdv"]
+[ext_resource type="Environment" uid="uid://c804tra5b2nmq" path="res://environments/lowres.tres" id="3_d5fn1"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_tsuwh"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_raagm"]
+frequency = 0.153
+fractal_type = 2
+fractal_lacunarity = 4.0
+fractal_weighted_strength = 1.0
+domain_warp_enabled = true
+domain_warp_type = 1
+domain_warp_fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7sxu3"]
+seamless = true
+noise = SubResource("FastNoiseLite_raagm")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t48o1"]
+albedo_texture = SubResource("NoiseTexture2D_7sxu3")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_o34pw"]
+material = SubResource("StandardMaterial3D_t48o1")
+size = Vector2(40, 40)
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_6j1h2")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="IngameSettings" parent="CanvasLayer" instance=ExtResource("2_uowdv")]
+worldEnvironmentPath = NodePath("../../WorldEnvironment")
+HighResEnvResource = "res://environments/highres.tres"
+LowResEnvResource = "res://environments/lowres.tres"
+mainCameraPath = NodePath("../../Camera3D")
+mainDirectionalLightPath = NodePath("../../DirectionalLight3D")
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_tsuwh")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.72253, -0.0234287, 0.690943, -0.0295878, 0.997462, 0.0647627, -0.690706, -0.0672365, 0.720003, 5.89984, 2.78033, 11.1354)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("3_d5fn1")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.907785, 0.419436, 0, -0.419436, 0.907785, -0.460371, 0.43849, 2.1924)
+shadow_enabled = true
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.879595, 0)
+mesh = SubResource("PlaneMesh_o34pw")
+
+[connection signal="FPSChanged" from="CanvasLayer/IngameSettings" to="." method="_on_ingame_settings_fps_changed"]
+[connection signal="FullscreenChagned" from="CanvasLayer/IngameSettings" to="." method="_on_ingame_settings_fullscreen_chagned"]
+[connection signal="ResolutionChanged" from="CanvasLayer/IngameSettings" to="." method="_on_ingame_settings_resolution_changed"]
+[connection signal="SettingsChanged" from="CanvasLayer/IngameSettings" to="." method="_on_ingame_settings_settings_changed"]
+[connection signal="VSyncChanged" from="CanvasLayer/IngameSettings" to="." method="_on_ingame_settings_v_sync_changed"]
